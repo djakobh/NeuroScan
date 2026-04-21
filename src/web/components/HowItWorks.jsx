@@ -3,14 +3,14 @@ const STEPS = [
     number: "01",
     title: "You upload an MRI scan",
     body:
-      "A magnetic resonance imaging (MRI) scan produces detailed images of the brain using magnetic fields. " +
+      "A MRI scan produces detailed images of the brain using magnetic fields. " +
       "The model accepts standard grayscale MRI images in JPEG or PNG format.",
   },
   {
     number: "02",
     title: "A neural network analyzes it",
     body:
-      "The image is fed into EfficientNetB0 — a deep convolutional neural network originally trained on " +
+      "The image is fed into EfficientNetB0, which is a deep convolutional neural network originally trained on " +
       "1.2 million photos and then fine-tuned on 5,700 labeled brain MRI scans across 4 classes.",
   },
   {
@@ -18,14 +18,14 @@ const STEPS = [
     title: "The model votes across 4 classes",
     body:
       "The network outputs a confidence score for each class: Glioma, Meningioma, Pituitary, and No Tumor. " +
-      "The class with the highest score wins. The confidence bar chart shows all four scores.",
+      "The class with the highest score is chosen and the confidence bar chart shows all four scores.",
   },
   {
     number: "04",
     title: "Grad-CAM explains the decision",
     body:
       "Gradient-weighted Class Activation Mapping (Grad-CAM) traces which pixels most strongly influenced " +
-      "the prediction. Red areas contributed the most — giving you a visual explanation rather than just a label.",
+      "the prediction. Red areas contributed the most. This gives you a visual explanation rather than just the output.",
   },
 ];
 

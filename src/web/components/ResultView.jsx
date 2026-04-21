@@ -7,8 +7,8 @@ const CLASS_INFO = {
     color: "#ef4444",
     badge: "bg-red",
     description:
-      "A glioma is a tumor that grows from glial cells — the brain's supportive tissue. " +
-      "The heatmap highlights the region the model found most characteristic of this tumor type. " +
+      "A glioma is a tumor that grows from glial cells. " +
+      "The heatmap highlights the area the model found most characteristic of this tumor type. " +
       "Gliomas vary widely in aggressiveness and require specialist evaluation.",
   },
   meningioma: {
@@ -16,7 +16,7 @@ const CLASS_INFO = {
     color: "#f97316",
     badge: "bg-orange",
     description:
-      "A meningioma grows from the meninges — the membranes that wrap around the brain and spinal cord. " +
+      "A meningioma grows from the meninges. These are the membranes that wrap around the brain and spinal cord. " +
       "Most meningiomas are benign (non-cancerous) and grow slowly. " +
       "The model focused on the tumor's boundary and density patterns to make this call.",
   },
@@ -34,7 +34,7 @@ const CLASS_INFO = {
     color: "#6366f1",
     badge: "bg-indigo",
     description:
-      "A pituitary tumor forms on the pituitary gland — a pea-sized gland at the brain's base " +
+      "A pituitary tumor forms on the pituitary gland. It is a pea-sized gland at the brain's base " +
       "that regulates hormones throughout the body. Most are non-cancerous and highly treatable. " +
       "The model detected characteristic density changes in that region.",
   },
