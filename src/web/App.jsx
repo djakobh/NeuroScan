@@ -16,27 +16,19 @@ export default function App() {
 
   async function analyzeRandom() {
     setLoading(true);
+    setStatus("loading");
+    setResult(null);
     try {
-      const sampleRes = await fetch(`${API_URL}/random-sample?t=${Date.now()}`);
-      if (!sampleRes.ok) throw new Error("Could not fetch sample");
-      const sampleClass = sampleRes.headers.get("X-Sample-Class");
-      const blob  = await sampleRes.blob();
-      const file  = new File([blob], `sample.${blob.type === "image/png" ? "png" : "jpg"}`, { type: blob.type });
-
-      setPreview(URL.createObjectURL(file));
-      setTrueClass(sampleClass);
-      setStatus("loading");
-      setResult(null);
-
-      const form = new FormData();
-      form.append("file", file);
-
-      const res = await fetch(`${API_URL}/explain`, { method: "POST", body: form });
+      const res = await fetch(`${API_URL}/analyze-random?t=${Date.now()}`);
       if (!res.ok) {
         const err = await res.json().catch(() => ({}));
         throw new Error(err.detail || `Server error ${res.status}`);
       }
-      setResult(await res.json());
+      const data = await res.json();
+
+      setPreview(`data:${data.image_media_type};base64,${data.image_base64}`);
+      setTrueClass(data.true_class);
+      setResult(data);
       setStatus("result");
     } catch (e) {
       setErrorMsg(e.message);

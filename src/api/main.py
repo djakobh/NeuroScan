@@ -2,9 +2,10 @@
 FastAPI backend for the brain tumor MRI classifier.
 
 Endpoints:
-    GET  /              — health check
-    POST /predict       — returns predicted class + confidence scores
-    POST /explain       — returns prediction + Grad-CAM heatmap as base64 PNG
+    GET  /                — health check
+    GET  /analyze-random  — pick a random sample, run inference + Grad-CAM, return everything
+    POST /predict         — returns predicted class + confidence scores
+    POST /explain         — returns prediction + Grad-CAM heatmap as base64 PNG
 
 Usage:
     uvicorn main:app --reload --port 8000
@@ -170,6 +171,63 @@ async def random_sample():
             "Cache-Control": "no-store",
         },
     )
+
+
+@app.get("/analyze-random")
+async def analyze_random():
+    """
+    Picks a random image from the Testing dataset, runs inference + Grad-CAM
+    entirely server-side, and returns everything in one response.
+
+    Response:
+        {
+            "true_class":        "glioma",
+            "image_base64":      "<base64 JPEG/PNG string>",
+            "image_media_type":  "image/jpeg",
+            "predicted_class":   "glioma",
+            "confidence":        0.712,
+            "scores":            { ... },
+            "heatmap_base64":    "<base64 PNG string>"
+        }
+    """
+    dataset_dir = MODEL_DIR.parent.parent / "data" / "Testing"
+    if not dataset_dir.exists():
+        raise HTTPException(status_code=404, detail="Testing dataset not found on this server.")
+
+    class_dirs = [d for d in dataset_dir.iterdir() if d.is_dir()]
+    if not class_dirs:
+        raise HTTPException(status_code=404, detail="No class folders found in Testing dataset.")
+
+    chosen_class = random.choice(class_dirs)
+    images = (
+        list(chosen_class.glob("*.jpg"))
+        + list(chosen_class.glob("*.jpeg"))
+        + list(chosen_class.glob("*.png"))
+    )
+    if not images:
+        raise HTTPException(status_code=404, detail=f"No images in {chosen_class.name}.")
+
+    chosen = random.choice(images)
+    media_type = "image/jpeg" if chosen.suffix.lower() in (".jpg", ".jpeg") else "image/png"
+
+    # Encode original image for the frontend to display (no separate request needed)
+    image_b64 = base64.b64encode(chosen.read_bytes()).decode("utf-8")
+
+    # Run inference + Grad-CAM directly from the file path — no upload roundtrip
+    tensor, rgb = preprocess(str(chosen))
+    pred_class, probs, grayscale_cam = run_gradcam(state["model"], tensor, state["device"])
+    heatmap = build_heatmap_only(rgb, grayscale_cam)
+    heatmap_b64 = _array_to_base64(heatmap)
+
+    return {
+        "true_class": chosen_class.name,
+        "image_base64": image_b64,
+        "image_media_type": media_type,
+        "predicted_class": CLASSES[pred_class],
+        "confidence": round(float(probs[pred_class]), 4),
+        "scores": _build_confidence_dict(probs),
+        "heatmap_base64": heatmap_b64,
+    }
 
 
 @app.post("/predict")
