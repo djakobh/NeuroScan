@@ -6,3 +6,6 @@ matplotlib
 seaborn
 tqdm
 pillow
+opencv-python-headless
+grad-cam
+numpy
