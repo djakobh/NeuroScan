@@ -60,7 +60,11 @@ app = FastAPI(
 # Allow the React dev server (port 3000) to call this API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=[
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+        "https://neuro-scan-three.vercel.app",
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
     expose_headers=["X-Sample-Class"],
