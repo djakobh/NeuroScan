@@ -14,7 +14,7 @@ node_modules/
 venv/
 
 # Large dataset / model files
-data/Training
+data/
 *.pt
 *.h5
 *.pkl

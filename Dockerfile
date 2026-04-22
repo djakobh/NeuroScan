@@ -7,7 +7,8 @@ RUN pip install --no-cache-dir -r api-requirements.txt -r ml-requirements.txt
 
 COPY src/api/ ./src/api/
 COPY packages/ml/ ./packages/ml/
-COPY data/Testing/ ./data/Testing/
+
+RUN huggingface-cli download djakobh/neuroscan-testing --repo-type dataset --local-dir ./data/Testing
 
 EXPOSE 7860
 CMD ["uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "7860"]
