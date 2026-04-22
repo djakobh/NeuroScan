@@ -147,7 +147,7 @@ async def random_sample():
     if not dataset_dir.exists():
         raise HTTPException(status_code=404, detail="Testing dataset not found on this server.")
 
-    class_dirs = [d for d in dataset_dir.iterdir() if d.is_dir()]
+    class_dirs = [d for d in dataset_dir.iterdir() if d.is_dir() and not d.name.startswith(".")]
     if not class_dirs:
         raise HTTPException(status_code=404, detail="No class folders found in Testing dataset.")
 
@@ -194,7 +194,7 @@ async def analyze_random():
     if not dataset_dir.exists():
         raise HTTPException(status_code=404, detail="Testing dataset not found on this server.")
 
-    class_dirs = [d for d in dataset_dir.iterdir() if d.is_dir()]
+    class_dirs = [d for d in dataset_dir.iterdir() if d.is_dir() and not d.name.startswith(".")]
     if not class_dirs:
         raise HTTPException(status_code=404, detail="No class folders found in Testing dataset.")
 
