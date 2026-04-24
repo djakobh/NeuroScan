@@ -34,7 +34,7 @@ export default function HowItWorks() {
     <section className="how-section">
       <h2 className="how-title">How does it work?</h2>
       <p className="how-subtitle">
-        No machine learning background needed — here is the full pipeline in plain language.
+        No machine learning background needed! Here is a breakdown of how it works without the technical jargon.
       </p>
       <div className="steps-grid">
         {STEPS.map((step) => (
